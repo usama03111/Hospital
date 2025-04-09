@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--here we inherit the (res.partner) module to move the email field -->
+<!--it is used to move the position of a field in odoo -->
+
+<odoo>
+    <record id="view_partner_tree_inherit" model="ir.ui.view">
+        <field name="name">res.partner</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+
+            <field name="phone" position="before">
+                <field name="email" position="move"/>
+            </field>
+
+            <!--            <xpath expr="//field[@name='payment_term_id']" position="after">-->
+            <!--                <field name="payment_last_date"/>-->
+            <!--            </xpath>-->
+
+        </field>
+    </record>
+
+
+</odoo>

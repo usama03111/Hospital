@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--by using noupdate="1 when we change the name and update the module the name will not be come to the origional format
+    and by using forcecreate="0" when we delete the record and update the module the record will not to be reversed-->
+    <data noupdate="1">
+        <record id="patient_tag_professor" model="patient.tag" forcecreate="0">
+            <field name="name">Professor</field>
+        </record>
+        <record id="patient_tag_vip" model="patient.tag">
+            <field name="name">VIP</field>
+        </record>
+        <record id="patient_tag_miss" model="patient.tag">
+            <field name="name">MIsses</field>
+            <field name="active" eval="False"/>
+        </record>
+    </data>
+</odoo>

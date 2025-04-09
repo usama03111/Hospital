@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+    <!--here we add the create Appointment inside the actions.server of a (hospital.patient)model-->
+    <!-- Share Button -->
+    <record id="action_create_appointments" model="ir.actions.server">
+        <field name="name">Create Appointment</field>
+        <field name="model_id" ref="us_hospital.model_hospital_patient"/>
+        <field name="binding_model_id" ref="us_hospital.model_hospital_patient"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+            action_values = env.ref('us_hospital.action_create_appointment').sudo().read()[0]
+            action_values.update({'context': env.context})
+            action = action_values
+        </field>   <!--It will call the python function (due to these error is occur so we set the doctor_id field as in in the create.appointment.wizard model-->
+    </record>
+
+
+    <record id="view_patient_kanban" model="ir.ui.view">
+        <field name="name">hospital.patient.kanban</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <kanban default_order="id asc">   <!--used to show the kanban view in ascending form-->
+                <field name="id"/>
+                <field name="name"/>
+                <field name="age"/>
+                <field name="gender"/>
+                <field name="note"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <ul>
+                                    <li>
+                                        <b>
+                                            ID:
+                                            <field name="reference"/>
+                                        </b>
+                                    </li>
+                                    <!--  Inserts the value of the name field from the record, escaping it to ensure no malicious HTML is injected.                                  -->
+                                    <strong class="o_kanban_record_title">
+                                        Name:
+                                        <t t-esc="record.name.value"/>
+                                    </strong>
+
+                                    <!--  second methode to appears name field  as a title.    -->
+                                    <!--li>-->
+                                    <!--<b>Name:-->
+                                    <!-- field name="name"/>-->
+                                    <!--</b>-->
+                                    <!--</li>-->
+
+                                    <li>
+                                        Age:
+                                        <field name="age"/>
+                                    </li>
+                                    <li>
+                                        Gender:
+                                        <field name="gender"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <!-- Here we can make a list/tree view for (hospital.patient) model -->
+    <record id="view_patient_tree" model="ir.ui.view">
+        <field name="name">hospital.patient.tree</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <tree expand="1" export_xlsx="0">
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="age" avg="Average"/>
+                <field name="gender"/>
+                <field name="appointment_count" sum="Total Appointments"/> <!--Aggregate options  sum/avg-->
+                <field name="note"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--here we can make a form view for a (hospital.patient)model-->
+    <record id="view_patient_form" model="ir.ui.view">
+        <field name="name">hospital.patient.form</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <form>
+                <!-- Add the status bar and buttons -->
+                <header>
+                    <button id="button_confirm" name="action_confirm" string="Confirm"
+                            class="btn-primary" type="object"
+                            invisible="state != 'draft'"/>
+
+
+                    <button id="button_done" name="action_done" string="Mark As Done"
+                            class="btn-primary" type="object"
+                            invisible="state != 'confirm'"/>
+
+                    <button id="button_draft" name="action_draft" string="Set To Draft"
+                            class="btn-primary" type="object"
+                            invisible="state != 'cancel'"/>
+
+                    <button id="button_cancel" name="action_cancel" string="Cancel"
+                            type="object"
+                            confirm="Are you sure to cancel?"
+                            invisible="state not in ('draft', 'confirm', 'done')"/>
+
+                    <button name="%(us_hospital.action_create_appointment)d"
+                            string="Create Appointment" class="btn-primary" type="action"
+                            context="{'hide_patient_id':1}"/>
+
+                    <field name="state" widget="statusbar">
+                        <attribute name="statusbar_visible">draft,done,confirm</attribute>
+                    </field>
+                </header>
+
+                <sheet>
+                    <!-- Alert for patient birthday -->
+                    <div class="alert alert-info text-center o_form_header" role="alert"
+                         invisible="not is_birthday">
+                        <a class="close" data-bs-dismiss="alert" href="#">x</a>
+                        <div>
+                            <strong>Today Is Birthday</strong>
+                        </div>
+                        <div>
+                            Wish
+                            <field name="name" readonly="1"/>
+                        </div>
+                    </div>
+
+                    <!-- Smart Button -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_appointments" type="object"
+                                class="oe_stat_button" icon="fa-calendar">
+                            <div class="o_stat_info">
+                                <field name="appointment_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Appointments</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Image Field -->
+                    <field name="image" widget="image" class="oe_avatar"/>
+
+                    <!-- Sequential Field -->
+                    <div class="oe_title">
+                        <h2>
+                            <span style="display: inline-block;">Ref:</span>
+                            <span style="display: inline-block;margin-left: 5px;">
+                                <field name="reference"/>
+                            </span>
+                        </h2>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="date_of_birth"/>
+                            <field name="age"/>
+                            <field name="appointment_count"/>
+                            <field name="is_birthday" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="gender" widget="radio" options="{'horizontal':true}"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="note"/>
+                            <field name="partner_id"/>
+                            <field name="order_id"/>
+                        </group>
+                    </group>
+
+                    <group string="Other Information" name="other_info">
+                        <group>
+                            <field name="marital_status" invisible="age  &lt;=  18"/>
+                            <field name="parent" invisible="age  >=  18"/>
+                            <field name="partner_name" readonly="marital_status != 'married'"
+                                   required="marital_status   ==  'married'"/>
+
+                        </group>
+                        <group>
+                            <field name="phone" widget="phone"/>
+                            <field name="email" widget="email"/>
+                            <field name="website" widget="url"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Appointments" name="appointment">
+                            <field name="appointment_ids" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <!-- Chatter -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <!--  Here we can add the search view to the hospital model -->
+
+    <record id="view_patient_search" model="ir.ui.view">
+        <field name="name">hospital.patient.search</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <search string="Patients">
+                <field name="name"/>
+                <field name="age"/>
+                <separator/>
+                <filter string="Male" name="male" domain="[('gender', '=', 'male')]"/>
+                <filter string="Female" name="female" domain="[('gender', '=', 'female')]"/>
+                <filter string="Others" name="others" domain="[('gender', '=', 'other')]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Gender" name="gender" context="{'group_by':'gender'}"/>
+                    <!--the name is used to access the group in the action of a kids-->
+                    <filter string="Responsible" name="group_by_responsible_id"
+                            context="{'group_by':'partner_id'}"/>
+                    <!--                    <filter string="Patient age" name="patient_age" context="{'group_by':'age'}"/>-->
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <!-- through action, we will show the models (records are inside the model)-->
+    <record id="action_hospital_patient" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.patient</field>
+        <!--when we click on the shop menu the (group on gender) is directly applied-->
+        <field name="context">{'search_default_gender':1}</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                create your first patient!
+            </p>
+        </field>
+    </record>
+
+
+</odoo>

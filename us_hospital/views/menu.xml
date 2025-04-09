@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <menuitem id="menu_hospital_root"
+              name="Hospital"
+              sequence="10"/>
+
+    <menuitem id="menu_patient_root"
+              name="Patients"
+              parent="menu_hospital_root"
+              sequence="10"/>
+
+    <menuitem id="menu_patient"
+              name="Patients"
+              action="action_hospital_patient"
+              parent="menu_patient_root"
+              sequence="10"/>
+
+    <menuitem
+            id="menu_reporting"
+            name="Reporting"
+            parent="menu_hospital_root"
+            sequence="40"/>
+
+    <menuitem
+            id="menu_appointment_report"
+            name="Appointments"
+            parent="menu_reporting"
+            sequence="10"
+            action="action_report_appointment"/>
+
+    <menuitem
+            id="menu_patient_report"
+            name="Patients"
+            parent="menu_reporting"
+            sequence="20"
+            action="action_report_patient"/>
+
+
+    <menuitem id="menu_appointment_root"
+              name="Appointments"
+              parent="menu_hospital_root"
+              sequence="30"/>
+
+    <menuitem id="menu_appointment"
+              name="Appointments"
+              sequence="10"
+              parent="menu_appointment_root"
+              action="action_hospital_appointment"/>
+    <!--we use these menu here because the order of the files in the __manifest__ wizard files will import firstly &
+     then views files will be imported-->
+    <menuitem id="menu_create_appointment"
+              name="Create Appointment"
+              sequence="20"
+              parent="menu_appointment_root"
+              action="action_create_appointment"/>
+
+    <!--here we add the search menu -->
+    <menuitem id="menu_search_appointment"
+              name="Search Appointment"
+              sequence="30"
+              parent="menu_appointment_root"
+              action="action_search_appointment"/>
+
+    <!--here we add the cancel appointment menu -->
+    <menuitem id="menu_cancel_appointment"
+              name="Cancel Appointment"
+              sequence="40"
+              parent="menu_appointment_root"
+              action="action_cancel_appointment"/>
+
+
+    <menuitem
+            id="menu_hospital_doctor_root"
+            name="Doctors"
+            sequence="20"
+            parent="menu_hospital_root"/>
+
+    <menuitem
+            id="menu_hospital_doctor"
+            name="Doctors"
+            sequence="10"
+            parent="menu_hospital_doctor_root"
+            action="hospital_doctor_action"/>
+
+
+    <menuitem
+            id="menu_kids"
+            name="Kids"
+            parent="menu_patient_root"
+            sequence="20"
+            action="action_hospital_kids"/>
+
+    <menuitem
+            id="menu_male_patients"
+            name="Male Patients"
+            sequence="30"
+            parent="menu_patient_root"
+            action="action_male_patients"/>
+
+
+    <menuitem
+            id="menu_female_patients"
+            name="Female Patients"
+            sequence="30"
+            parent="menu_patient_root"
+            action="action_female_patients"/>
+
+
+
+
+
+    <menuitem id="menu_sale_appointment"
+              name="Appointments"
+              parent="sale.sale_order_menu"
+              sequence="20"
+              action="action_hospital_appointment"/>
+
+<!--    -->
+    <menuitem id="menu_patient_tag_root"
+              name="Configuration"
+              parent="menu_hospital_root"
+              sequence="50"/>
+
+    <menuitem id="menu_patient_tag"
+              name="Tags"
+              parent="menu_patient_tag_root"
+              sequence="10"
+              action="patient_tag_action"/>
+</odoo>

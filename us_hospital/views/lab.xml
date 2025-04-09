@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="hospital_lab_view_form" model="ir.ui.view">
+        <field name="name">hospital.lab.view.form</field>
+        <field name="model">hospital.lab</field>
+        <field name="arch" type="xml">
+            <form string="Lab Form">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hospital_lab_view_tree" model="ir.ui.view">
+        <field name="name">hospital.lab.view.tree</field>
+        <field name="model">hospital.lab</field>
+        <field name="arch" type="xml">
+            <tree string="Hospital Lab Tree">
+                <field name="name"/>
+                <field name="user_id"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="hospital_lab_action" model="ir.actions.act_window">
+        <field name="name">Hospital Lab</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.lab</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            id="menu_hospital_lab_root"
+            name="Hospital Lab"
+            parent="menu_hospital_root"
+            sequence="60"/>
+
+    <menuitem
+            id="menu_hospital_lab_sub"
+            parent="menu_hospital_lab_root"
+            name="Lab"
+            action="hospital_lab_action"
+            sequence="10"/>
+
+</odoo>

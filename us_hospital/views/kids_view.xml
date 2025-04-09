@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_hospital_kids" model="ir.actions.act_window">
+        <field name="name">Kids</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.patient</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="context">{'search_default_group_by_responsible_id': 1}</field>
+        <field name="domain">[('age' , '&lt;=' , 18)]</field>
+        <!-- if you want to show only age is >=18 and  male patients so you can write
+        these or if you want to use or condition you can write as '|' inside the square brackets
+        and are shown in the kids menu-->
+<!--        <field name="domain">[('age' , '&lt;=' , 18),('gender','=' , 'male')]</field>-->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                !Here the record of Kids
+            </p>
+        </field>
+    </record>
+
+
+</odoo>
