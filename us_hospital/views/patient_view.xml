@@ -23,12 +23,15 @@
         <field name="name">hospital.patient.kanban</field>
         <field name="model">hospital.patient</field>
         <field name="arch" type="xml">
-            <kanban default_order="id asc">   <!--used to show the kanban view in ascending form-->
+            <kanban class="o_kanban_mobile"  default_group_by="state">   <!--used to show the kanban view in ascending form-->
                 <field name="id"/>
                 <field name="name"/>
                 <field name="age"/>
                 <field name="gender"/>
                 <field name="note"/>
+                <field name="state"/>
+                  <progressbar field="state"
+                 colors='{"confirm": "success", "done":"info", "cancel": "danger", "draft": "warning"}'/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
@@ -45,13 +48,6 @@
                                         Name:
                                         <t t-esc="record.name.value"/>
                                     </strong>
-
-                                    <!--  second methode to appears name field  as a title.    -->
-                                    <!--li>-->
-                                    <!--<b>Name:-->
-                                    <!-- field name="name"/>-->
-                                    <!--</b>-->
-                                    <!--</li>-->
 
                                     <li>
                                         Age:

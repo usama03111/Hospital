@@ -4,7 +4,6 @@ from datetime import date
 from dateutil import relativedelta
 from dateutil.utils import today
 from pkg_resources import require
-from reportlab.graphics.renderbase import inverse
 
 from odoo import api, fields, models, _
 from odoo.addons.test_convert.tests.test_env import field, record

@@ -30,18 +30,18 @@ class HospitalAppointment(models.Model):
         res = super(HospitalAppointment,self).default_get(fields_list)
         if not res.get('date_appointment'):
             res['date_appointment'] = datetime.date.today()
-        appointment_lines = []
-        product_rec = self.env['product.product'].search([])
-        for pro in product_rec:
-            line = (0,0, {
-                'name':pro.id,
-                'qty':2,
-            })
-            appointment_lines.append(line)
-        res.update({
-            'prescription_line_ids':appointment_lines,
-            'patient_id':18,
-        })
+        # appointment_lines = []
+        # product_rec = self.env['product.product'].search([])
+        # for pro in product_rec:
+        #     line = (0,0, {
+        #         'name':pro.id,
+        #         'qty':2,
+        #     })
+        #     appointment_lines.append(line)
+        # res.update({
+        #     'prescription_line_ids':appointment_lines,
+        #     'patient_id':18,
+        # })
         return res
 
     # Adding the sequential field to generate the serial numbers
@@ -58,7 +58,14 @@ class HospitalAppointment(models.Model):
 
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'),
                               ('done', 'Done'), ('cancel', 'Cancelled')],
-                             String="Status", default='draft', tracking=7)
+                             String="Status", default='draft', tracking=7 , group_expand='_read_group_stage_ids')
+    # @api.model
+    # def _read_group_stage_ids(self,stages,domain,order):
+    #     return [key for key , _ in self._fields['state'].selection ]
+
+    def _read_group_stage_ids(self, states, domain, order):
+        return [key for key, val in type(self).state.selection]
+
     # add the doctor field
     doctor_id = fields.Many2one('hospital.doctor', string='Doctor', required=True ,
                                 help="select the doctor for a patient" , tracking=2)
@@ -93,7 +100,7 @@ class HospitalAppointment(models.Model):
         ("male", "Male"),
         ("female", "Female"),
         ("other", "other"),
-    ],string='Gender')
+    ],string='Gender' ,)
     note = fields.Text(string="Description")
     # how to add date and time
     date_appointment = fields.Date(string="Date" , tracking=4)
@@ -104,7 +111,6 @@ class HospitalAppointment(models.Model):
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     # here we create the progress widget in odoo
     progress = fields.Integer(string='Progress' , compute='_compute_progress')
-
     # product_id = fields.Many2one('product.template',string='Product Template')
     # @api.onchange('product_id')
     # def onchange_product_id(self):
@@ -135,13 +141,7 @@ class HospitalAppointment(models.Model):
 
     def action_draft(self):
         self.state = 'draft'
-        # return {
-        #     'warning': {
-        #         'fadeout': 'slow',
-        #         'title': "Invalid Quantity",
-        #         'message': "Quantity must be a positive integer.",
-        #     }
-        # }
+
 
     def action_cancel(self):
         self.state = 'cancel'

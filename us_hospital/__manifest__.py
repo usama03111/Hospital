@@ -35,7 +35,7 @@
         'views/odoo_playground_view.xml',
         # 'views/res_config_settings_views.xml',
         'views/lab.xml',
-        'views/website_form.xml',
+        # 'views/website_form.xml',
         'views/patient_template.xml',
         'report/report.xml',
         'report/appointment_details.xml',
