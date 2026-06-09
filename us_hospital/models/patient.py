@@ -18,7 +18,6 @@ class HospitalPatient(models.Model):
     # _inherit = ["mail.thread"]
     _inherit = ['mail.thread','mail.activity.mixin']  # mail.thread for sending email and mail.activity.mixin for showing activity in the form view
     _description = "To manage the hospital patient"
-    # _order = 'reference desc'  OR
     _order = 'id desc'
 
     name = fields.Char(string="Name", required=True, tracking=True)
@@ -244,9 +243,8 @@ class HospitalPatient(models.Model):
 
     # these function is for testing a button which was added  for group in the tree view of hospital.appointment
     def test_group(self):
-        print("test group")
-        return
-
+        pass
+    company = fields.Many2one('res.company', string='Company' , default=lambda self: self.env.user.company_id)
     # this function is for alert message to print the birthday
     @api.depends('date_of_birth')
     def _compute_is_birthday(self):
